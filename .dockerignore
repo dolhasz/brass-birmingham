@@ -1,0 +1,8 @@
+.git
+README.md
+screenshots
+Dockerfile
+.dockerignore
+railway.toml
+node_modules
+*.log
