@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns="http://purl.org/rss/1.0/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+  <channel rdf:about="https://rdf.example.org/feed">
+    <title>Example RDF Wire</title>
+    <link>https://rdf.example.org</link>
+    <description>RSS 1.0 style feed</description>
+  </channel>
+
+  <item rdf:about="https://rdf.example.org/a/sudan">
+    <title>Sudan: RSF advance on El Fasher displaces thousands, aid groups warn</title>
+    <link>https://rdf.example.org/a/sudan</link>
+    <description>Humanitarian access remains blocked.</description>
+    <dc:date>2026-08-19T10:00:00Z</dc:date>
+  </item>
+
+  <item rdf:about="https://rdf.example.org/a/redsea">
+    <title>Houthi forces attack vessel transiting the Red Sea</title>
+    <link>https://rdf.example.org/a/redsea</link>
+    <description>Crew evacuated safely, operator says.</description>
+    <dc:date>2026-08-19T07:45:00Z</dc:date>
+  </item>
+
+</rdf:RDF>

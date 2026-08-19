@@ -1,0 +1,15 @@
+{
+  "name": "global-conflict-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Live global conflict monitoring dashboard — newswire aggregation, market stress and geolocated reporting density across active theaters.",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node test/run.js"
+  },
+  "license": "MIT"
+}

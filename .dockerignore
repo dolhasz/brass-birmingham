@@ -1,8 +1,10 @@
 .git
-README.md
-screenshots
-Dockerfile
-.dockerignore
-railway.toml
+.gitignore
 node_modules
+test
+*.md
+*.tgz
 *.log
+railway.toml
+.env
+.env.*

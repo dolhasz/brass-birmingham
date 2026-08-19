@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Example World Service</title>
+    <link>https://example.org/world</link>
+    <description>World news</description>
+    <lastBuildDate>Wed, 19 Aug 2026 12:00:00 GMT</lastBuildDate>
+
+    <item>
+      <title><![CDATA[Missile strike reported near Kharkiv as Ukraine says air defences engaged]]></title>
+      <link>https://example.org/world/article-1?utm=rss&amp;src=feed</link>
+      <description><![CDATA[<p>Officials said <b>shelling</b> continued overnight. Casualties reported.</p>]]></description>
+      <pubDate>Wed, 19 Aug 2026 11:42:00 GMT</pubDate>
+      <guid isPermaLink="false">urn:example:1</guid>
+      <dc:creator>Staff Reporter</dc:creator>
+      <media:content url="https://example.org/img/1.jpg" />
+    </item>
+
+    <item>
+      <title>Israeli strikes hit southern Lebanon; Hezbollah says it retaliated</title>
+      <link>https://example.org/world/article-2</link>
+      <description>Cross-border exchanges continued for a third day &amp; talks stalled.</description>
+      <pubDate>Wed, 19 Aug 2026 10:15:00 GMT</pubDate>
+      <guid isPermaLink="true">https://example.org/world/article-2</guid>
+    </item>
+
+    <item>
+      <title>Ceasefire talks resume in Geneva &mdash; negotiators signal progress</title>
+      <link>https://example.org/world/article-3</link>
+      <description>Delegations met for a fourth round.</description>
+      <pubDate>Wed, 19 Aug 2026 08:00:00 GMT</pubDate>
+    </item>
+
+    <!-- Deliberately malformed: no link. Must be skipped, not crash. -->
+    <item>
+      <title>Item with no link at all</title>
+      <pubDate>Wed, 19 Aug 2026 07:00:00 GMT</pubDate>
+    </item>
+
+    <!-- Unclosed description tag: parser must tolerate it. -->
+    <item>
+      <title>Tolerance check: unclosed tag follows</title>
+      <link>https://example.org/world/article-5</link>
+      <description>Truncated body
+      <pubDate>Wed, 19 Aug 2026 06:00:00 GMT</pubDate>
+    </item>
+
+  </channel>
+</rss>

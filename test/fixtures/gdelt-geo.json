@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [36.2304, 49.9808] },
+      "properties": { "name": "Kharkiv, Kharkivs'ka Oblast', Ukraine", "count": 184 }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [30.5234, 50.4501] },
+      "properties": { "name": "Kyiv, Kyiv, Ukraine", "count": 402 }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [37.6173, 55.7558] },
+      "properties": { "name": "Moscow, Moskva, Russia", "count": 96 }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [35.0, 48.4] },
+      "properties": { "name": "Dnipro, Ukraine" }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Polygon", "coordinates": [[[0, 0], [1, 1], [2, 2]]] },
+      "properties": { "name": "Not a point — must be skipped", "count": 999 }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": ["bad", "data"] },
+      "properties": { "name": "Malformed coordinates", "count": 5 }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "type": "FeatureCollection",
+  "metadata": { "title": "USGS Magnitude 4.5+ Earthquakes, Past Week", "count": 4 },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "us7000abcd",
+      "properties": {
+        "mag": 5.2,
+        "place": "23 km NNE of Punggye-ri, North Korea",
+        "time": 1787222400000,
+        "type": "earthquake",
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000abcd"
+      },
+      "geometry": { "type": "Point", "coordinates": [129.1, 41.32, 0.5] }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000efgh",
+      "properties": {
+        "mag": 6.1,
+        "place": "112 km SW of Tokyo, Japan",
+        "time": 1787136000000,
+        "type": "earthquake",
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000efgh"
+      },
+      "geometry": { "type": "Point", "coordinates": [138.5, 34.8, 42.0] }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000ijkl",
+      "properties": {
+        "mag": 4.7,
+        "place": "Nevada Test Site region",
+        "time": 1787049600000,
+        "type": "explosion",
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000ijkl"
+      },
+      "geometry": { "type": "Point", "coordinates": [-116.05, 37.12, 1.2] }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000mnop",
+      "properties": {
+        "mag": 4.9,
+        "place": "Off the coast of Chile",
+        "time": 1786963200000,
+        "type": "earthquake",
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000mnop"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.2, -33.4, 18.0] }
+    }
+  ]
+}

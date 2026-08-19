@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Live global conflict monitoring dashboard — newswire, market stress and geolocated reporting density across active theaters.">
+<meta name="color-scheme" content="dark">
+<title>Global Conflict Monitor</title>
+<link rel="preload" href="data/countries-50m.json" as="fetch" crossorigin="anonymous">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%23e63946' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%23e63946'/></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text">
+      <strong>GLOBAL CONFLICT MONITOR</strong>
+      <small>Open-source situational dashboard</small>
+    </span>
+  </div>
+
+  <div class="composite" id="composite-header">
+    <div class="composite-readout">
+      <span class="composite-value" id="composite-value">--</span>
+      <span class="composite-scale">/100</span>
+    </div>
+    <div class="composite-meta">
+      <span class="composite-band" id="composite-band">awaiting data</span>
+      <button class="linklike" id="methodology-btn" type="button" aria-expanded="false">
+        what is this?
+      </button>
+    </div>
+  </div>
+
+  <div class="topbar-status">
+    <div class="clock">
+      <span id="utc-clock">--:--:--</span>
+      <small>UTC</small>
+    </div>
+    <div class="refresh">
+      <span class="status-dot" id="status-dot" data-state="loading"></span>
+      <span id="last-updated">connecting…</span>
+      <button class="icon-btn" id="refresh-btn" type="button" title="Refresh now" aria-label="Refresh now">⟳</button>
+    </div>
+  </div>
+</header>
+
+<div class="banner" id="degraded-banner" hidden>
+  <strong>Partial data.</strong>
+  <span id="degraded-detail"></span>
+</div>
+
+<main class="layout">
+
+  <!-- LEFT: index breakdown + theater watchlist -->
+  <aside class="rail rail-left">
+    <section class="panel panel-index">
+      <h2 class="panel-title">Composite index</h2>
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 120 68" aria-hidden="true">
+          <path class="gauge-track" d="M10 62 A50 50 0 0 1 110 62" />
+          <path class="gauge-fill" id="gauge-fill" d="M10 62 A50 50 0 0 1 110 62" />
+        </svg>
+        <div class="gauge-center">
+          <span id="gauge-value">--</span>
+        </div>
+      </div>
+      <ul class="component-list" id="component-list"></ul>
+    </section>
+
+    <section class="panel panel-theaters">
+      <h2 class="panel-title">
+        Theaters
+        <span class="panel-hint" id="theater-count"></span>
+      </h2>
+      <div class="theater-list" id="theater-list" role="list">
+        <div class="placeholder">Loading theaters…</div>
+      </div>
+    </section>
+  </aside>
+
+  <!-- CENTER: map -->
+  <section class="mapzone">
+    <div class="map-container" id="map-container"></div>
+
+    <div class="map-controls">
+      <button class="map-btn" id="zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button class="map-btn" id="zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button class="map-btn" id="zoom-reset" type="button" aria-label="Reset view">⌂</button>
+    </div>
+
+    <div class="map-legend">
+      <div class="legend-row">
+        <span class="legend-title">Reporting level</span>
+        <span class="legend-chip lvl-1">1</span>
+        <span class="legend-chip lvl-2">2</span>
+        <span class="legend-chip lvl-3">3</span>
+        <span class="legend-chip lvl-4">4</span>
+        <span class="legend-chip lvl-5">5</span>
+      </div>
+      <label class="legend-toggle">
+        <input type="checkbox" id="toggle-density" checked>
+        <span>Reporting density</span>
+      </label>
+      <p class="legend-note">
+        Shading reflects volume and recency of monitored reporting, not verified
+        ground conditions.
+      </p>
+    </div>
+
+    <div class="map-tooltip" id="map-tooltip" hidden></div>
+  </section>
+
+  <!-- RIGHT: priority wire -->
+  <aside class="rail rail-right">
+    <section class="panel panel-wire">
+      <h2 class="panel-title">
+        Priority wire
+        <span class="panel-hint" id="wire-meta"></span>
+      </h2>
+      <div class="wire-filters">
+        <input type="search" id="wire-search" placeholder="Filter headlines…" aria-label="Filter headlines">
+        <select id="wire-lane" aria-label="Filter by source type">
+          <option value="all">All sources</option>
+          <option value="wire">Wires</option>
+          <option value="defense">Defense</option>
+          <option value="official">Official</option>
+          <option value="regional">Regional</option>
+        </select>
+      </div>
+      <div class="wire-list" id="wire-list">
+        <div class="placeholder">Loading wire…</div>
+      </div>
+    </section>
+
+    <section class="panel panel-side" id="panel-seismic">
+      <h2 class="panel-title">Seismic monitor <span class="panel-hint">M4.5+ / 7d</span></h2>
+      <div id="seismic-list"><div class="placeholder">—</div></div>
+    </section>
+
+    <section class="panel panel-side" id="panel-humanitarian">
+      <h2 class="panel-title">Humanitarian <span class="panel-hint">ReliefWeb</span></h2>
+      <div id="humanitarian-list"><div class="placeholder">—</div></div>
+    </section>
+  </aside>
+
+</main>
+
+<!-- BOTTOM: market ticker -->
+<footer class="ticker" id="ticker">
+  <div class="ticker-label">
+    <span>MARKETS</span>
+    <small id="stress-readout">stress --</small>
+  </div>
+  <div class="ticker-track" id="ticker-track">
+    <span class="placeholder">Loading market data…</span>
+  </div>
+</footer>
+
+<!-- Theater detail drawer -->
+<div class="drawer" id="drawer" hidden aria-live="polite">
+  <div class="drawer-head">
+    <div>
+      <h2 id="drawer-title">Theater</h2>
+      <p class="drawer-sub" id="drawer-sub"></p>
+    </div>
+    <button class="icon-btn" id="drawer-close" type="button" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</div>
+
+<!-- Methodology dialog -->
+<div class="modal" id="methodology" hidden role="dialog" aria-modal="true" aria-labelledby="methodology-title">
+  <div class="modal-card">
+    <div class="drawer-head">
+      <h2 id="methodology-title">What these numbers mean</h2>
+      <button class="icon-btn" id="methodology-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p>
+        This dashboard aggregates <strong>public reporting</strong>. Every figure on
+        it describes what is being published and how markets have moved — not
+        verified conditions on the ground.
+      </p>
+
+      <h3>Composite index</h3>
+      <p>A weighted blend of three observable components:</p>
+      <ul>
+        <li><strong>Theater reporting intensity (45%)</strong> — volume and recency of newswire items classified to each watch theater, weighted by that theater's standing risk baseline.</li>
+        <li><strong>Market stress (30%)</strong> — same-day moves in VIX, gold, Brent crude, natural gas and the S&amp;P 500.</li>
+        <li><strong>Escalation language density (25%)</strong> — the share of the last 24 hours of wire items containing escalation-signal terms.</li>
+      </ul>
+
+      <h3>Important limits</h3>
+      <ul>
+        <li>Reporting volume tracks <em>media attention</em>. It rises with news cycles and falls where journalists cannot operate — a quiet theater is not a safe one.</li>
+        <li>Theater levels are floored near their baseline so an ongoing war does not read as resolved on a slow news day.</li>
+        <li>Keyword classification produces occasional mistakes. Always read the linked source.</li>
+        <li>Nothing here is predictive. There is no model of intent, capability or escalation probability.</li>
+        <li>The seismic panel flags shallow events near known test sites as a <em>geometry</em> heuristic. Natural earthquakes and mining blasts trip the same conditions; USGS's own classification is authoritative.</li>
+      </ul>
+
+      <h3>Sources</h3>
+      <p id="source-status-list" class="source-status"></p>
+    </div>
+  </div>
+</div>
+
+<noscript>
+  <div class="noscript">
+    This dashboard renders live data client-side and requires JavaScript.
+    The underlying feeds are available as JSON at <code>/api/overview</code>.
+  </div>
+</noscript>
+
+<script type="module" src="js/app.mjs"></script>
+</body>
+</html>

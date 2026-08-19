@@ -1,11 +1,19 @@
-FROM nginx:alpine
+# Zero runtime dependencies — the whole service is stdlib Node, so there is no
+# install step and no lockfile to reconcile.
+FROM node:22-alpine
 
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY index.html /usr/share/nginx/html/index.html
-COPY css /usr/share/nginx/html/css
-COPY js /usr/share/nginx/html/js
+WORKDIR /app
 
-ENV PORT=8080
+COPY package.json ./
+COPY server ./server
+COPY public ./public
+
+ENV NODE_ENV=production \
+    PORT=8080
+
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Run unprivileged; the node image ships a `node` user for exactly this.
+USER node
+
+CMD ["node", "server/index.js"]
