@@ -6,6 +6,10 @@ humanitarian situation reports and seismic monitoring — in one screen.
 
 ![Dashboard](docs/dashboard.png)
 
+<p align="center">
+  <img src="docs/mobile.png" alt="Mobile layout" width="300">
+</p>
+
 > **What this is.** An aggregation and visualisation tool for public reporting.
 > Every number on it describes *what is being published* and *how markets moved*.
 > It is not a measurement of conditions on the ground, and it does not predict
@@ -19,10 +23,16 @@ No build step, no runtime dependencies — the whole service is standard-library
 Node.
 
 ```
-npm start          # http://localhost:8080
-npm test           # 50 unit + integration tests
-node test/browser.js   # browser smoke test (needs Chromium)
+npm start              # http://localhost:8080
+npm test               # 50 unit + HTTP integration tests, no browser needed
+npm run test:browser   # desktop rendering and interaction (needs Chromium)
+npm run test:mobile    # small-screen layout across four phone/tablet viewports
+npm run test:all       # everything
 ```
+
+The browser tests need `playwright-core` (`npm install`) and a Chromium build;
+they look for one under `/opt/pw-browsers`. The unit suite has no dependencies
+at all.
 
 ## Deploying to Railway
 
@@ -57,6 +67,16 @@ nuclear test sites. Underground tests register as shallow seismic events, which
 is how public reporting of them has historically broken first.
 
 **Humanitarian** — active ReliefWeb disaster records and situation reports.
+
+### On a phone
+
+Below 1024px the three-column layout gives way to a pinned map plus a bottom
+tab bar — **Theaters · Wire · Markets · Alerts** — showing one panel at a time,
+with live badges for high-level theaters, wire volume, market stress and
+flagged seismic events. The market ticker becomes a vertical list, and the
+theater drawer goes full screen. `npm run test:mobile` asserts every tab
+renders with usable height at four viewports, since a panel collapsing to zero
+height is invisible to desktop tests.
 
 ---
 

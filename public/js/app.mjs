@@ -59,6 +59,14 @@ const dom = {
   drawerBody: document.getElementById('drawer-body'),
   drawerClose: document.getElementById('drawer-close'),
 
+  tabbar: document.getElementById('tabbar'),
+  tabBadges: {
+    situation: document.getElementById('tab-badge-situation'),
+    wire: document.getElementById('tab-badge-wire'),
+    markets: document.getElementById('tab-badge-markets'),
+    alerts: document.getElementById('tab-badge-alerts'),
+  },
+
   methodology: document.getElementById('methodology'),
   methodologyBtn: document.getElementById('methodology-btn'),
   methodologyClose: document.getElementById('methodology-close'),
@@ -151,6 +159,8 @@ async function loadOverview() {
       (data.wireMeta && data.wireMeta.sources) || []
     );
 
+    updateTabBadges(data);
+
     const problems = [];
     if (data.errors && data.errors.length) problems.push(...data.errors);
     const badSources = ((data.wireMeta && data.wireMeta.sources) || []).filter((s) => !s.ok);
@@ -189,6 +199,7 @@ async function loadSeismic() {
   try {
     const data = await getJSON('/api/seismic');
     panels.renderSeismic(dom.seismicList, data);
+    setAlertBadge((data.flagged || []).length);
   } catch (err) {
     replace(dom.seismicList, h('div', { class: 'placeholder', text: 'Seismic feed unavailable.' }));
   }
@@ -286,6 +297,40 @@ function closeDrawer() {
 }
 
 // ---------------------------------------------------------------------------
+// Small-screen tabs
+// ---------------------------------------------------------------------------
+// The tab bar only exists below the desktop breakpoint; on wide screens every
+// panel is visible at once and this is inert apart from the data attribute.
+
+function setTab(tab) {
+  document.body.dataset.tab = tab;
+  for (const btn of dom.tabbar.querySelectorAll('.tab')) {
+    btn.setAttribute('aria-selected', String(btn.dataset.tab === tab));
+  }
+  // The map keeps its own height across tabs, but the panel column beneath it
+  // changes size — let the SVG re-fit to the new box.
+  if (state.map) requestAnimationFrame(() => state.map.resize());
+}
+
+function updateTabBadges(data) {
+  const severe = (data.theaters || []).filter((t) => t.level >= 4).length;
+  dom.tabBadges.situation.textContent = severe ? String(severe) : '';
+  dom.tabBadges.situation.dataset.alert = severe >= 3 ? 'true' : 'false';
+
+  const total = data.wireMeta ? data.wireMeta.total : 0;
+  dom.tabBadges.wire.textContent = total ? String(Math.min(total, 999)) : '';
+
+  const stress = data.markets && data.markets.stress;
+  dom.tabBadges.markets.textContent = stress && stress.value !== null ? String(stress.value) : '';
+  dom.tabBadges.markets.dataset.alert = stress && stress.value >= 70 ? 'true' : 'false';
+}
+
+function setAlertBadge(count) {
+  dom.tabBadges.alerts.textContent = count ? String(count) : '';
+  dom.tabBadges.alerts.dataset.alert = count > 0 ? 'true' : 'false';
+}
+
+// ---------------------------------------------------------------------------
 // Map tooltip
 // ---------------------------------------------------------------------------
 
@@ -355,6 +400,12 @@ async function initMap() {
 }
 
 function bindControls() {
+  setTab('situation');
+  dom.tabbar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab');
+    if (btn) setTab(btn.dataset.tab);
+  });
+
   dom.refreshBtn.addEventListener('click', () => {
     loadOverview();
     loadGeo();

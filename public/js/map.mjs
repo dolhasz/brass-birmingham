@@ -310,8 +310,23 @@ export class WarMap {
     this.zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, factor);
   }
 
+  /**
+   * The whole world, centred for the element's current shape.
+   *
+   * The world is 2:1. In a taller box the viewBox has to be taller than the
+   * world, and that surplus must be split above and below — otherwise the map
+   * hugs the top of its container and leaves a band of dead space beneath it.
+   */
+  _fullView() {
+    const rect = this.svg.getBoundingClientRect();
+    const aspect = rect.width && rect.height ? rect.height / rect.width : 0.5;
+    const w = WORLD.width;
+    const h = w * aspect;
+    return { x: 0, y: (WORLD.height - h) / 2, w, h };
+  }
+
   reset() {
-    this._animateTo({ x: 0, y: 0, w: WORLD.width, h: WORLD.height });
+    this._animateTo(this._fullView());
   }
 
   /** Zoom to a theater's neighbourhood. */
@@ -347,12 +362,19 @@ export class WarMap {
     this.anim = requestAnimationFrame(step);
   }
 
-  /** Match the viewBox aspect to the element so the world is not stretched. */
+  /**
+   * Match the viewBox aspect to the element so the world is not stretched,
+   * holding the current centre point so a resize does not shift what the
+   * viewer is looking at.
+   */
   resize() {
     const rect = this.svg.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    const aspect = rect.height / rect.width;
-    this.view.h = this.view.w * aspect;
+
+    const centreY = this.view.y + this.view.h / 2;
+    this.view.h = this.view.w * (rect.height / rect.width);
+    this.view.y = centreY - this.view.h / 2;
+
     this._clampView();
     this._applyView();
   }

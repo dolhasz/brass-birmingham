@@ -159,6 +159,27 @@
   </div>
 </footer>
 
+<!-- Small-screen navigation. Hidden at desktop widths, where every panel is
+     visible at once and tabs would only get in the way. -->
+<nav class="tabbar" id="tabbar" role="tablist" aria-label="Dashboard sections">
+  <button class="tab" type="button" role="tab" data-tab="situation" aria-selected="true">
+    <span class="tab-label">Theaters</span>
+    <span class="tab-badge" id="tab-badge-situation"></span>
+  </button>
+  <button class="tab" type="button" role="tab" data-tab="wire" aria-selected="false">
+    <span class="tab-label">Wire</span>
+    <span class="tab-badge" id="tab-badge-wire"></span>
+  </button>
+  <button class="tab" type="button" role="tab" data-tab="markets" aria-selected="false">
+    <span class="tab-label">Markets</span>
+    <span class="tab-badge" id="tab-badge-markets"></span>
+  </button>
+  <button class="tab" type="button" role="tab" data-tab="alerts" aria-selected="false">
+    <span class="tab-label">Alerts</span>
+    <span class="tab-badge" id="tab-badge-alerts"></span>
+  </button>
+</nav>
+
 <!-- Theater detail drawer -->
 <div class="drawer" id="drawer" hidden aria-live="polite">
   <div class="drawer-head">

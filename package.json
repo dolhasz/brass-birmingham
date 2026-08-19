@@ -9,7 +9,13 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node test/run.js"
+    "test": "node test/run.js",
+    "test:browser": "node test/browser.js",
+    "test:mobile": "node test/mobile.js",
+    "test:all": "node test/run.js && node test/browser.js && node test/mobile.js"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.49.0"
   },
   "license": "MIT"
 }
